@@ -1,0 +1,13 @@
+entity.webdashboard.collection:
+  title: 'Web Dashboards'
+  route_name: entity.webdashboard.collection
+  parent: system.admin_structure
+  description: 'Create dashboards and build them with Display Builder.'
+  weight: 2
+
+webdashboard.settings_form:
+  title: 'Web Dashboard settings'
+  route_name: webdashboard.settings_form
+  parent: system.admin_config_system
+  description: 'Chart colors of the dashboards.'
+  weight: 99

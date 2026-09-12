@@ -1,0 +1,8 @@
+name: Web Dashboard Webform
+type: module
+description: 'Webform submission charts for the Web Dashboard.'
+package: Web Dashboard
+core_version_requirement: '^11.4 || ^12'
+dependencies:
+  - webdashboard:webdashboard
+  - webform:webform

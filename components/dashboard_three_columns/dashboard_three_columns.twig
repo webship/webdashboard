@@ -1,0 +1,17 @@
+{%
+  set classes = [
+    'webdashboard-layout',
+    'webdashboard-layout--three-columns',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
+  <div class="webdashboard-layout__column webdashboard-layout__region webdashboard-layout__region--one">
+    {{ one }}
+  </div>
+  <div class="webdashboard-layout__column webdashboard-layout__region webdashboard-layout__region--two">
+    {{ two }}
+  </div>
+  <div class="webdashboard-layout__column webdashboard-layout__region webdashboard-layout__region--three">
+    {{ three }}
+  </div>
+</section>

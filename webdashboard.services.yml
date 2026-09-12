@@ -1,0 +1,24 @@
+services:
+  plugin.manager.webdashboard_item:
+    class: Drupal\webdashboard\Plugin\DashboardItemManager
+    parent: default_plugin_manager
+  Drupal\webdashboard\Plugin\DashboardItemManager: '@plugin.manager.webdashboard_item'
+
+  cache.webdashboard:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: ['@cache_factory', 'get']
+    arguments: [webdashboard]
+
+  theme.negotiator.webdashboard:
+    class: Drupal\webdashboard\Theme\DashboardThemeNegotiator
+    arguments: ['@config.factory', '@current_user']
+    tags:
+      - { name: theme_negotiator, priority: 1000 }
+
+  webdashboard.page_variant_subscriber:
+    class: Drupal\webdashboard\EventSubscriber\DashboardPageVariantSubscriber
+    arguments: ['@theme.manager', '@config.factory', '@module_handler']
+    tags:
+      - { name: event_subscriber }

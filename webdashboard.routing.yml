@@ -1,0 +1,63 @@
+webdashboard.settings_form:
+  path: '/admin/config/system/webdashboard'
+  defaults:
+    _form: '\Drupal\webdashboard\Form\DashboardSettingsForm'
+    _title: 'Dashboard settings'
+  requirements:
+    _permission: 'administer webdashboard'
+
+# The default dashboard, built with Display Builder.
+entity.webdashboard.display_builder:
+  path: '/admin/structure/webdashboards/manage/{webdashboard}/builder'
+  defaults:
+    _controller: '\Drupal\webdashboard\Controller\DashboardController::getBuilder'
+    _title_callback: '\Drupal\webdashboard\Controller\DashboardController::getBuilderTitle'
+  requirements:
+    _permission: 'administer webdashboard'
+  options:
+    parameters:
+      webdashboard:
+        type: 'entity:webdashboard'
+    _admin_route: false
+    _display_builder_full_page_route: true
+
+# The dashboard of the current user, built with Display Builder.
+entity.webdashboard.override:
+  path: '/webdashboard/{webdashboard}/override'
+  defaults:
+    _controller: '\Drupal\webdashboard\Controller\DashboardController::getOverrideBuilder'
+    _title_callback: '\Drupal\webdashboard\Controller\DashboardController::getOverrideTitle'
+  requirements:
+    _custom_access: '\Drupal\webdashboard\Access\DashboardOverrideAccess::access'
+  options:
+    parameters:
+      webdashboard:
+        type: 'entity:webdashboard'
+    _admin_route: false
+    _display_builder_full_page_route: true
+
+entity.webdashboard.override_reset:
+  path: '/webdashboard/{webdashboard}/override/reset'
+  defaults:
+    _form: '\Drupal\webdashboard\Form\DashboardResetOverrideForm'
+    _title: 'Reset to default'
+  requirements:
+    _custom_access: '\Drupal\webdashboard\Access\DashboardOverrideAccess::resetAccess'
+  options:
+    parameters:
+      webdashboard:
+        type: 'entity:webdashboard'
+
+entity.webdashboard.entity_permissions_form:
+  path: '/admin/structure/webdashboards/manage/{webdashboard}/permissions'
+  defaults:
+    _form: '\Drupal\webdashboard\Form\DashboardPermissionsForm'
+    _title: 'Manage permissions'
+  requirements:
+    _permission: 'administer permissions'
+  options:
+    parameters:
+      webdashboard:
+        type: 'entity:webdashboard'
+        with_config_overrides: true
+    _admin_route: true

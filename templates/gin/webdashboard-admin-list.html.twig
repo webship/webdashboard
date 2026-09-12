@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * Gin theme implementation of a dashboard item list.
+ *
+ * The whole item is a link, the way Gin draws its administration lists.
+ *
+ * @see webdashboard-admin-list.html.twig
+ *
+ * @ingroup themeable
+ */
+#}
+{% set classes = [
+  'admin-list--panel',
+  'admin-list',
+] %}
+<dl{{ attributes.addClass(classes) }}>
+  {% for item in list %}
+    <div class="admin-item{% if item.image %} admin-item-with-image{% endif %}">
+      <a{{ item.link_attributes.addClass('admin-item__link') }}>{{ item.title }}</a>
+      {% if item.image %}
+        <div class="image"><img src="{{ item.image }}" alt="" /></div>
+        <div class="content">
+      {% endif %}
+      <dt class="admin-item__title">
+        {{ item.title }}
+      </dt>
+      {% if item.description %}
+        <dd class="admin-item__description">
+          {{ item.description }}
+        </dd>
+      {% endif %}
+      {% if item.image %}
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</dl>

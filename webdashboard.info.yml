@@ -1,0 +1,9 @@
+name: Web Dashboard
+type: module
+description: 'Dashboards built with Display Builder. Create dashboards as configuration, let people personalize their own copy, and place dashboard items, charts and views on them.'
+core_version_requirement: '^11.4 || ^12'
+configure: entity.webdashboard.collection
+dependencies:
+  - display_builder:display_builder
+  - drupal:user
+  - drupal:views

@@ -1,0 +1,15 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Dashboard: 3 columns'
+status: stable
+group: Dashboard
+description: 'Three regions of equal width.'
+props:
+  type: object
+  properties: {}
+slots:
+  one:
+    title: 'Left'
+  two:
+    title: 'Middle'
+  three:
+    title: 'Right'

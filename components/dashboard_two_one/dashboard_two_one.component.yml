@@ -1,0 +1,19 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Dashboard: 2 and one column'
+status: stable
+group: Dashboard
+description: 'Two stacked regions on the narrow side, next to one wide region.'
+props:
+  type: object
+  properties:
+    reverse:
+      type: boolean
+      title: 'Reverse columns'
+      description: 'Put the wide region first.'
+slots:
+  one:
+    title: 'Left Top'
+  two:
+    title: 'Left Bottom'
+  three:
+    title: 'Right'

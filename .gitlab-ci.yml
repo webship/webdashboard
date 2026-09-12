@@ -1,0 +1,18 @@
+include:
+  - project: $_GITLAB_TEMPLATES_REPO
+    ref: $_GITLAB_TEMPLATES_REF
+    file:
+      - "/includes/include.drupalci.main.yml"
+      - "/includes/include.drupalci.variables.yml"
+      - "/includes/include.drupalci.workflows.yml"
+
+variables:
+  # For now, build and test with Drupal 11.4 and PHP 8.4. Set globally, so
+  # every job uses the same Drupal core and PHP versions.
+  DRUPAL_CORE: "11.4.x-dev"
+  _TARGET_PHP: "8.4"
+  IGNORE_PROJECT_DRUPAL_CORE_VERSION: "1"
+  # js/es/chart.js is the compiled Chart.js bundle.
+  SKIP_ESLINT: "1"
+  _CSPELL_IGNORE_PATHS: "js/es/*"
+  _PHPUNIT_CONCURRENT: "0"

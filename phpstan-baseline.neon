@@ -1,0 +1,12 @@
+parameters:
+	ignoreErrors:
+		-
+			# The optional Matomo Reporting API module is not installed in CI.
+			identifier: class.notFound
+			count: 2
+			path: modules/webdashboard_matomo/src/Plugin/DashboardItem/MatomoBase.php
+		-
+			# The permissions form of a config entity extends the core form.
+			identifier: classExtendsInternalClass.classExtendsInternalClass
+			count: 1
+			path: src/Form/DashboardPermissionsForm.php

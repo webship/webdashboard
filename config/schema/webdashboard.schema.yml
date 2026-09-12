@@ -1,0 +1,99 @@
+webdashboard.settings:
+  type: config_object
+  label: 'Web Dashboard settings'
+  mapping:
+    colormap:
+      type: string
+      label: 'Colormap'
+    alpha:
+      type: integer
+      label: 'Transparency'
+    shades:
+      type: integer
+      label: 'Number of colors in map'
+
+webdashboard.webdashboard.*:
+  type: config_entity
+  label: 'Dashboard'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name'
+    admin_label:
+      type: label
+      label: 'Administrative label'
+    category:
+      type: label
+      label: 'Category'
+    frontend:
+      type: boolean
+      label: 'Show always in frontend theme'
+    weight:
+      type: weight
+      label: 'Weight'
+    profile:
+      type: string
+      label: 'Display Builder profile'
+    sources:
+      type: sequence
+      label: 'UI Patterns sources'
+      sequence:
+        type: ignore
+
+block.settings.webdashboard_item:*:
+  type: block_settings
+  label: 'Dashboard item block settings'
+  mapping:
+    view_mode:
+      type: string
+      label: 'View mode'
+    include_destination:
+      type: boolean
+      label: 'Include destination'
+    items:
+      type: sequence
+      label: 'Content types'
+      sequence:
+        type: mapping
+        mapping:
+          weight:
+            type: weight
+            label: 'Weight'
+    chart_type:
+      type: string
+      label: 'Chart type'
+    legend:
+      type: boolean
+      label: 'Show legend'
+    uri:
+      type: string
+      label: 'Feed URL'
+    max_items:
+      type: integer
+      label: 'How many items to display'
+    show_description:
+      type: boolean
+      label: 'Show description'
+    show_images:
+      type: boolean
+      label: 'Show images'
+    view:
+      type: string
+      label: 'View and display'
+    count:
+      type: string
+      label: 'Count'
+    period:
+      type: string
+      label: 'Period'
+    date:
+      type: string
+      label: 'Date range'
+    fields:
+      type: sequence
+      label: 'Stats to show'
+      sequence:
+        type: string
+    webform:
+      type: string
+      label: 'Webform'

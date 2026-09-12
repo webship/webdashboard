@@ -1,0 +1,9 @@
+name: Web Dashboard Matomo
+type: module
+description: 'Matomo visitor analytics charts for the Web Dashboard.'
+package: Web Dashboard
+core_version_requirement: '^11.4 || ^12'
+dependencies:
+  - matomo:matomo
+  - matomo_reporting_api:matomo_reporting_api
+  - webdashboard:webdashboard

@@ -1,0 +1,22 @@
+{%
+  set classes = [
+    'webdashboard-layout',
+    'webdashboard-layout--two-one',
+    reverse ? 'webdashboard-layout--reverse',
+  ]
+%}
+<section{{ attributes.addClass(classes) }}>
+  <div class="webdashboard-layout__column webdashboard-layout__column--narrow">
+    <div class="webdashboard-layout__region webdashboard-layout__region--one">
+      {{ one }}
+    </div>
+    <div class="webdashboard-layout__region webdashboard-layout__region--two">
+      {{ two }}
+    </div>
+  </div>
+  <div class="webdashboard-layout__column webdashboard-layout__column--wide">
+    <div class="webdashboard-layout__region webdashboard-layout__region--three">
+      {{ three }}
+    </div>
+  </div>
+</section>

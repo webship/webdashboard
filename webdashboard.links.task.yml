@@ -1,0 +1,22 @@
+entity.webdashboard.canonical:
+  title: 'View'
+  route_name: entity.webdashboard.canonical
+  base_route: entity.webdashboard.canonical
+  weight: -20
+
+entity.webdashboard.display_builder:
+  title: 'Default Dashboard'
+  route_name: entity.webdashboard.display_builder
+  base_route: entity.webdashboard.canonical
+  weight: -10
+
+entity.webdashboard.edit_form:
+  title: 'Edit'
+  route_name: entity.webdashboard.edit_form
+  base_route: entity.webdashboard.canonical
+
+entity.webdashboard.entity_permissions_form:
+  title: 'Permissions'
+  route_name: entity.webdashboard.entity_permissions_form
+  base_route: entity.webdashboard.canonical
+  weight: 10

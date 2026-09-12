@@ -1,6 +1,36 @@
 {
-    "name": "drupal/webdashboard",
-    "type": "drupal-module",
-    "description": "Dashboards built with Display Builder instead of Layout Builder.",
-    "license": "GPL-2.0-or-later"
+  "name": "drupal/webdashboard",
+  "description": "Dashboards built with Display Builder: configuration entities, per-user personalization, dashboard items, charts and embedded views. Part of Webship: the UI Suite UIkit theme (UIkit and HTMX) on top of Drupal and Display Builder.",
+  "type": "drupal-module",
+  "homepage": "https://www.drupal.org/project/webdashboard",
+  "license": "GPL-2.0-or-later",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Webship",
+      "homepage": "https://webship.co",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/webdashboard",
+    "source": "https://git.drupalcode.org/project/webdashboard"
+  },
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  },
+  "require": {
+    "drupal/core": "^11.4 || ^12",
+    "drupal/display_builder": "^1.0@beta",
+    "laminas/laminas-feed": "^2.17"
+  },
+  "suggest": {
+    "drupal/matomo": "Web Dashboard Matomo: reports site visitor analytics to a Matomo instance.",
+    "drupal/matomo_reporting_api": "Web Dashboard Matomo: retrieves reports from the Matomo API.",
+    "drupal/statistics": "Web Dashboard Statistics: logs how many times content is viewed.",
+    "drupal/webform": "Web Dashboard Webform: submission charts."
+  }
 }

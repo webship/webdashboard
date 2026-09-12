@@ -1,0 +1,8 @@
+name: Web Dashboard Statistics
+type: module
+description: 'Most visited content for the Web Dashboard, from the Statistics module.'
+package: Web Dashboard
+core_version_requirement: '^11.4 || ^12'
+dependencies:
+  - statistics:statistics
+  - webdashboard:webdashboard

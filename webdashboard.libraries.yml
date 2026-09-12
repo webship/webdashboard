@@ -1,0 +1,20 @@
+core:
+  css:
+    theme:
+      css/dashboard.css: {}
+
+chart:
+  css:
+    theme:
+      css/chart.css: {}
+  js:
+    js/es/chart.js: { minified: true }
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.dialog
+
+admin_list:
+  css:
+    component:
+      css/admin-list.css: {}

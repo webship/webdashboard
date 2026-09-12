@@ -1,0 +1,30 @@
+.webdashboard-layout--two-one {
+  display: flex;
+  gap: 1rem;
+}
+
+.webdashboard-layout--two-one.webdashboard-layout--reverse {
+  flex-direction: row-reverse;
+}
+
+.webdashboard-layout--two-one .webdashboard-layout__column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1rem;
+}
+
+.webdashboard-layout--two-one .webdashboard-layout__column--narrow {
+  flex: 1 1 0;
+}
+
+.webdashboard-layout--two-one .webdashboard-layout__column--wide {
+  flex: 2 1 0;
+}
+
+@media only screen and (max-width: 800px) {
+  .webdashboard-layout--two-one,
+  .webdashboard-layout--two-one.webdashboard-layout--reverse {
+    flex-direction: column;
+  }
+}

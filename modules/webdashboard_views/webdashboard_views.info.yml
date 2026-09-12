@@ -1,0 +1,9 @@
+name: Web Dashboard Views
+type: module
+description: 'Embed views of the last content, for the Web Dashboard.'
+package: Web Dashboard
+core_version_requirement: '^11.4 || ^12'
+dependencies:
+  - drupal:node
+  - drupal:views
+  - webdashboard:webdashboard

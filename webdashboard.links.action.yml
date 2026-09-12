@@ -1,0 +1,20 @@
+entity.webdashboard.add_form:
+  title: 'New dashboard'
+  route_name: entity.webdashboard.add_form
+  weight: 1
+  appears_on:
+    - entity.webdashboard.collection
+
+entity.webdashboard.override:
+  title: 'Personalize'
+  route_name: entity.webdashboard.override
+  weight: 1
+  appears_on:
+    - entity.webdashboard.canonical
+
+entity.webdashboard.override_reset:
+  title: 'Reset to default'
+  route_name: entity.webdashboard.override_reset
+  weight: 2
+  appears_on:
+    - entity.webdashboard.canonical

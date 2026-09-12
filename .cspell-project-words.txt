@@ -1,0 +1,28 @@
+# List of words excluded from cspell validation for the Web Dashboard project.
+# Mostly contains custom names: variables, modules, colormaps, etc...
+bathymetry
+blackbody
+bluered
+cdom
+colormap
+colormaps
+cubehelix
+daycount
+freesurface
+matomo
+nshades
+totalcount
+UNIXTIME
+viridis
+webdashboard
+webform
+
+# 'views.view.webdashboard_last_comments.yml': Binary identifier used for key.
+MQNAY
+
+# Project names, routes and test variables.
+buildables
+personalizer
+webdashboards
+webforms
+Webship

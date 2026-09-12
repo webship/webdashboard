@@ -1,0 +1,7 @@
+administer webdashboard:
+  title: 'Administer dashboards'
+  description: 'Create, edit, build and delete any dashboard, and change the dashboard settings.'
+  restrict access: true
+
+permission_callbacks:
+  - Drupal\webdashboard\DashboardPermissions::permissions
