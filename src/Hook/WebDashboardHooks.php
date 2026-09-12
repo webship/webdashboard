@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\user\UserDataInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
@@ -30,7 +31,37 @@ class WebDashboardHooks {
     protected ModuleExtensionList $moduleList,
     #[Autowire(service: 'current_route_match')]
     protected RouteMatchInterface $routeMatch,
+    #[Autowire(service: 'user.data')]
+    protected UserDataInterface $userData,
   ) {}
+
+  /**
+   * Implements hook_module_preuninstall().
+   *
+   * Core does not discover hook_uninstall() in hook classes, so the clean-up
+   * runs before uninstall, while the entity types still exist.
+   */
+  #[Hook('module_preuninstall')]
+  public function modulePreuninstall(string $module): void {
+    if ($module !== 'webdashboard') {
+      return;
+    }
+
+    // The personalized dashboards of every user.
+    $this->userData->delete('webdashboard');
+
+    // Builder instances are content entities, so uninstalling the dashboards
+    // configuration leaves the ones nobody reached through a dashboard behind.
+    $storage = $this->entityTypeManager->getStorage('display_builder_instance');
+    $ids = $storage->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('id', 'webdashboard', 'STARTS_WITH')
+      ->execute();
+
+    if ($ids) {
+      $storage->delete($storage->loadMultiple($ids));
+    }
+  }
 
   /**
    * Implements hook_help().

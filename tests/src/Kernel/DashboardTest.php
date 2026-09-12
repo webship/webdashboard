@@ -204,6 +204,29 @@ final class DashboardTest extends KernelTestBase {
   }
 
   /**
+   * Tests the clean-up before uninstall removes instances and personalizations.
+   */
+  public function testModulePreuninstall(): void {
+    $dashboard = $this->createDashboard([self::SOURCE]);
+    $account = $this->createUser();
+    $dashboard->setOverriddenSources($account, [self::SOURCE]);
+    $this->createOverride($dashboard, $account)->initInstanceIfMissing();
+
+    $instance_storage = $this->container->get('entity_type.manager')->getStorage('display_builder_instance');
+    $user_data = $this->container->get('user.data');
+    $module_handler = $this->container->get('module_handler');
+
+    // Another module being uninstalled leaves the dashboards alone.
+    $module_handler->invokeAll('module_preuninstall', ['views']);
+    $this->assertCount(2, $instance_storage->loadMultiple());
+    $this->assertNotNull($user_data->get(DashboardInterface::USER_DATA_MODULE, (int) $account->id(), 'board'));
+
+    $module_handler->invokeAll('module_preuninstall', ['webdashboard']);
+    $this->assertCount(0, $instance_storage->loadMultiple());
+    $this->assertNull($user_data->get(DashboardInterface::USER_DATA_MODULE, (int) $account->id(), 'board'));
+  }
+
+  /**
    * Tests finding the dashboard an account lands on.
    */
   public function testDefaultDashboard(): void {
