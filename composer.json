@@ -1,0 +1,6 @@
+{
+    "name": "drupal/webdashboard",
+    "type": "drupal-module",
+    "description": "Dashboards built with Display Builder instead of Layout Builder.",
+    "license": "GPL-2.0-or-later"
+}
