@@ -70,6 +70,13 @@ class DashboardSettingsForm extends ConfigFormBase {
       '#config_target' => 'webdashboard.settings:shades',
     ];
 
+    $form['redirect_after_login'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Redirect to the dashboard after login'),
+      '#description' => $this->t('Sends people who can view a dashboard to the first of them, ordered by weight, when they log in. A destination in the login link still wins.'),
+      '#config_target' => 'webdashboard.settings:redirect_after_login',
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 

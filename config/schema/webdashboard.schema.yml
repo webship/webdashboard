@@ -11,6 +11,9 @@ webdashboard.settings:
     shades:
       type: integer
       label: 'Number of colors in map'
+    redirect_after_login:
+      type: boolean
+      label: 'Redirect to the dashboard after login'
 
 webdashboard.webdashboard.*:
   type: config_entity

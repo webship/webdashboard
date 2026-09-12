@@ -4,6 +4,11 @@ services:
     parent: default_plugin_manager
   Drupal\webdashboard\Plugin\DashboardItemManager: '@plugin.manager.webdashboard_item'
 
+  webdashboard.default_dashboard_resolver:
+    class: Drupal\webdashboard\DefaultDashboardResolver
+    arguments: ['@entity_type.manager']
+  Drupal\webdashboard\DefaultDashboardResolver: '@webdashboard.default_dashboard_resolver'
+
   cache.webdashboard:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

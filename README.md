@@ -70,6 +70,18 @@ drush en webdashboard -y
 4. To let people personalize the dashboard, grant *Can personalize*, and the
    permission to use the Display Builder profile of the dashboard.
 
+## Reach the dashboards
+
+* **Dashboard link.** *Dashboard* in the administration menu, at
+  `/admin/webdashboard`, leads to the first dashboard, ordered by weight, the
+  user can view. The link is hidden from people who can view none. The
+  administration theme toolbar shows it, with or without the core Toolbar
+  module.
+* **After login.** Turn on *Redirect to the dashboard after login* in
+  *Configuration > System > Web Dashboard settings* to send people to their
+  dashboard when they log in. Off by default. A destination in the login link
+  still wins, and one-time login links keep leading to the account form.
+
 ## From Layout Builder to Display Builder
 
 | Dashboards (Layout Builder)          | Web Dashboard (Display Builder)                  |

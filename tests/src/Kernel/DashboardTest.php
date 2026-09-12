@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\webdashboard\Kernel;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -200,6 +201,29 @@ final class DashboardTest extends KernelTestBase {
     $dashboard->delete();
     $this->assertCount(0, $instance_storage->loadMultiple());
     $this->assertNull($this->container->get('user.data')->get(DashboardInterface::USER_DATA_MODULE, (int) $account->id(), 'board'));
+  }
+
+  /**
+   * Tests finding the dashboard an account lands on.
+   */
+  public function testDefaultDashboard(): void {
+    Dashboard::create(['id' => 'webmaster', 'admin_label' => 'Webmaster', 'weight' => -20])->save();
+    Dashboard::create(['id' => 'editorial', 'admin_label' => 'Editorial', 'weight' => -10])->save();
+    $admin = $this->createUser(['administer webdashboard']);
+    $editor = $this->createUser([DashboardPermissions::viewPermission('editorial')]);
+
+    /** @var \Drupal\webdashboard\DefaultDashboardResolver $resolver */
+    $resolver = $this->container->get('webdashboard.default_dashboard_resolver');
+    $cacheability = new CacheableMetadata();
+    $this->assertSame('webmaster', $resolver->resolve($admin, $cacheability)?->id());
+    $this->assertContains('user.permissions', $cacheability->getCacheContexts());
+    $this->assertEmpty(\array_diff(
+      $this->container->get('entity_type.manager')->getDefinition('webdashboard')->getListCacheTags(),
+      $cacheability->getCacheTags(),
+    ));
+
+    $this->assertSame('editorial', $resolver->resolve($editor)?->id());
+    $this->assertNull($resolver->resolve($this->createUser()));
   }
 
   /**

@@ -1,3 +1,12 @@
+# A top level administration link, so the toolbar of the administration theme
+# reaches the dashboards without the core Toolbar module.
+webdashboard.default:
+  title: 'Dashboard'
+  route_name: webdashboard.default
+  parent: system.admin
+  description: 'Go to your dashboard.'
+  weight: -15
+
 entity.webdashboard.collection:
   title: 'Web Dashboards'
   route_name: entity.webdashboard.collection

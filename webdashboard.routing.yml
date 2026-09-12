@@ -6,6 +6,15 @@ webdashboard.settings_form:
   requirements:
     _permission: 'administer webdashboard'
 
+# The first dashboard, by weight, the current user can view.
+webdashboard.default:
+  path: '/admin/webdashboard'
+  defaults:
+    _controller: '\Drupal\webdashboard\Controller\DashboardRedirectController::redirectToDefault'
+    _title: 'Dashboard'
+  requirements:
+    _custom_access: '\Drupal\webdashboard\Access\DefaultDashboardAccess::access'
+
 # The default dashboard, built with Display Builder.
 entity.webdashboard.display_builder:
   path: '/admin/structure/webdashboards/manage/{webdashboard}/builder'
