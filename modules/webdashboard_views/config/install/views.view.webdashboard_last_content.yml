@@ -23,7 +23,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'administer nodes'
+          perm: 'access content overview'
       cache:
         type: tag
         options: {  }
