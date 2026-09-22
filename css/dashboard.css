@@ -100,3 +100,47 @@ html.webdashboard .toolbar .toolbar-bar .home-toolbar-tab {
   /* The 'gin-spacing-m' value is provided by contrib theme 'gin'. */
   padding: var(--gin-spacing-m, 1rem);
 }
+
+/* Compact content lists: the dashboard views of the Web Dashboard recipe. */
+.webdashboard-list table {
+  width: 100%;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.webdashboard-list th {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+
+.webdashboard-list td a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.webdashboard-list .more-link {
+  margin-top: 0.75rem;
+  text-align: end;
+}
+
+.webdashboard-list .more-link a {
+  font-weight: 600;
+}
+
+.webdashboard-badge {
+  display: inline-block;
+  padding: 0.125rem 0.625rem;
+  white-space: nowrap;
+  color: #166534;
+  border-radius: 999px;
+  background: #dcfce7;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.webdashboard-badge--0 {
+  color: #92400e;
+  background: #fef3c7;
+}
