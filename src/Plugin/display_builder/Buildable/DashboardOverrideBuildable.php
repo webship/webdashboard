@@ -7,6 +7,7 @@ namespace Drupal\webdashboard\Plugin\display_builder\Buildable;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -37,6 +38,11 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
    * The user data service.
    */
   protected UserDataInterface $userData;
+
+  /**
+   * The language manager, for the translation languages of the dashboard.
+   */
+  protected LanguageManagerInterface $dashboardLanguageManager;
 
   /**
    * The dashboard, once passed in or loaded by ::getEntity().
@@ -72,6 +78,7 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->userData = $container->get('user.data');
+    $instance->dashboardLanguageManager = $container->get('language_manager');
 
     return $instance;
   }
@@ -368,6 +375,20 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
     $account = $this->entityTypeManager->getStorage('user')->load($this->configuration['uid']);
 
     return $account;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * The dashboard is a configuration entity: it can be translated to every
+   * language of the site.
+   */
+  public function getTranslationLanguages($include_default = TRUE): array {
+    $languages = $this->dashboardLanguageManager->getLanguages();
+    if (!$include_default) {
+      unset($languages[$this->dashboardLanguageManager->getDefaultLanguage()->getId()]);
+    }
+    return $languages;
   }
 
 }

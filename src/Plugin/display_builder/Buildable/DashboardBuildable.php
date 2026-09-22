@@ -6,6 +6,7 @@ namespace Drupal\webdashboard\Plugin\display_builder\Buildable;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -16,6 +17,7 @@ use Drupal\display_builder\DisplayReference;
 use Drupal\display_builder\Entity\Instance;
 use Drupal\display_builder\Entity\ProfileInterface;
 use Drupal\webdashboard\Entity\DashboardInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * The default dashboard, stored in the dashboard configuration entity.
@@ -26,6 +28,11 @@ use Drupal\webdashboard\Entity\DashboardInterface;
   instance_prefix: 'webdashboard__',
 )]
 final class DashboardBuildable extends DisplayBuildablePluginBase {
+
+  /**
+   * The language manager, for the translation languages of the dashboard.
+   */
+  protected LanguageManagerInterface $dashboardLanguageManager;
 
   /**
    * The dashboard, once passed in or loaded by ::getEntity().
@@ -51,6 +58,16 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
     $this->entity = $configuration['entity'];
     unset($this->configuration['entity']);
     $this->configuration['entity_id'] = $this->entity->id();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->dashboardLanguageManager = $container->get('language_manager');
+
+    return $instance;
   }
 
   /**
@@ -257,6 +274,20 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
     }
 
     return $this->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * The dashboard is a configuration entity: it can be translated to every
+   * language of the site.
+   */
+  public function getTranslationLanguages($include_default = TRUE): array {
+    $languages = $this->dashboardLanguageManager->getLanguages();
+    if (!$include_default) {
+      unset($languages[$this->dashboardLanguageManager->getDefaultLanguage()->getId()]);
+    }
+    return $languages;
   }
 
 }
