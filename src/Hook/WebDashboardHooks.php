@@ -121,8 +121,8 @@ class WebDashboardHooks {
   /**
    * Implements hook_theme_registry_alter().
    *
-   * Gin gets a variant of the admin list template, unless a theme already
-   * overrides it.
+   * Gin and the Default Admin theme get a variant of the admin list template,
+   * unless a theme already overrides it: both draw the whole item as a link.
    */
   #[Hook('theme_registry_alter')]
   public function themeRegistryAlter(array &$theme_registry): void {
@@ -135,7 +135,7 @@ class WebDashboardHooks {
     $theme = $this->themeManager->getActiveTheme();
     $themes = [$theme->getName(), ...\array_keys($theme->getBaseThemeExtensions())];
 
-    if (\in_array('gin', $themes, TRUE)) {
+    if (\array_intersect(['gin', 'default_admin'], $themes)) {
       $theme_registry['webdashboard_admin_list']['path'] = $module_path . '/templates/gin';
     }
   }

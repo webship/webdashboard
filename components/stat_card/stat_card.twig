@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * A number with a label on a dashboard.
+ */
+#}
+{% set tag = url ? 'a' : 'div' %}
+<{{ tag }}{{ attributes.addClass('webdashboard-stat', 'webdashboard-stat--' ~ (tone ?: 'neutral')) }}{% if url %} href="{{ url }}"{% endif %}>
+  <span class="webdashboard-stat__value">{{ value }}</span>
+  <span class="webdashboard-stat__label">{{ label }}</span>
+  {% if description %}
+    <span class="webdashboard-stat__description">{{ description }}</span>
+  {% endif %}
+</{{ tag }}>

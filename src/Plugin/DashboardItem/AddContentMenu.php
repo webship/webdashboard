@@ -65,7 +65,14 @@ class AddContentMenu extends DashboardItemBase {
     $access_handler = $this->entityTypeManager->getAccessControlHandler('node');
     $items = [];
 
-    foreach (\array_keys($configuration['items'] ?? []) as $bundle) {
+    // Without a chosen list, offer every content type, in label order.
+    $bundles = \array_keys($configuration['items'] ?? []);
+    if (!$bundles) {
+      \uasort($types, static fn ($a, $b) => \strnatcasecmp((string) $a->label(), (string) $b->label()));
+      $bundles = \array_keys($types);
+    }
+
+    foreach ($bundles as $bundle) {
       if (!isset($types[$bundle]) || !$access_handler->createAccess($bundle)) {
         continue;
       }

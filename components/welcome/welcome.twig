@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Welcome card of a dashboard.
+ */
+#}
+<section{{ attributes.addClass('webdashboard-welcome') }}>
+  <div class="webdashboard-welcome__avatar" aria-hidden="true">
+    {% if picture %}
+      <img src="{{ picture }}" alt="" />
+    {% else %}
+      <span>{{ initials }}</span>
+    {% endif %}
+  </div>
+  <div class="webdashboard-welcome__body">
+    {% if greeting %}
+      <p class="webdashboard-welcome__greeting">{{ greeting }}</p>
+    {% endif %}
+    <h2 class="webdashboard-welcome__name">{{ name }}</h2>
+    {% if meta %}
+      <ul class="webdashboard-welcome__meta">
+        {% for fact in meta %}
+          <li>{{ fact }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+  {% if links %}
+    <nav class="webdashboard-welcome__actions" aria-label="{{ 'Quick actions'|t }}">
+      {% for link in links %}
+        <a class="webdashboard-welcome__action" href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+  {% endif %}
+</section>

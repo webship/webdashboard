@@ -1,0 +1,38 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Dashboard: Welcome'
+status: stable
+group: Dashboard
+description: 'Greets the current user with their picture, a few facts and quick actions.'
+props:
+  type: object
+  properties:
+    name:
+      type: string
+      title: Name
+    picture:
+      type: string
+      title: 'Picture URL'
+      description: 'Leave empty to show the initials.'
+    initials:
+      type: string
+      title: Initials
+    greeting:
+      type: string
+      title: Greeting
+      description: 'A short line above the name, like "Good morning".'
+    meta:
+      type: array
+      title: Facts
+      description: 'Short facts about the account, like how long the user has been a member.'
+      items:
+        type: string
+    links:
+      type: array
+      title: 'Quick actions'
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+          url:
+            type: string

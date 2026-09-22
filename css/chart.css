@@ -3,3 +3,10 @@
   margin: 1.5rem 0.75rem;
   padding: 1em 40px 1em 24px;
 }
+
+/* Round charts keep a readable size in wide columns. */
+[data-app="chart"]:is([data-chart-type="doughnut"], [data-chart-type="pie"], [data-chart-type="polarArea"]) canvas {
+  max-width: 20rem !important;
+  max-height: 20rem !important;
+  margin-inline: auto;
+}

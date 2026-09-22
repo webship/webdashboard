@@ -1,0 +1,30 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: 'Dashboard: Stat card'
+status: stable
+group: Dashboard
+description: 'A number with a label, linking to the page with the details.'
+props:
+  type: object
+  properties:
+    value:
+      type: string
+      title: Value
+    label:
+      type: string
+      title: Label
+    description:
+      type: string
+      title: Description
+    url:
+      type: string
+      title: URL
+    tone:
+      type: string
+      title: Tone
+      enum:
+        - neutral
+        - info
+        - success
+        - warning
+        - danger
+      default: neutral
