@@ -130,17 +130,18 @@ html.webdashboard .toolbar .toolbar-bar .home-toolbar-tab {
 }
 
 .webdashboard-badge {
+  --webdashboard-badge-tone: var(--admin-color-text-success, var(--gin-color-green, var(--color-success, #1d6844)));
+
   display: inline-block;
   padding: 0.125rem 0.625rem;
   white-space: nowrap;
-  color: #166534;
+  color: var(--webdashboard-badge-tone);
   border-radius: 999px;
-  background: #dcfce7;
+  background: color-mix(in sRGB, var(--webdashboard-badge-tone) 15%, transparent);
   font-size: 0.75rem;
   font-weight: 600;
 }
 
 .webdashboard-badge--0 {
-  color: #92400e;
-  background: #fef3c7;
+  --webdashboard-badge-tone: var(--admin-color-text-warning, var(--gin-color-warning, var(--color-warning, #826b1f)));
 }

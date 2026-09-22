@@ -1,15 +1,29 @@
 .webdashboard-welcome {
-  --webdashboard-welcome-accent: var(--accent-base, #015efe);
+  /* Colors of the administration theme: the core Default Admin theme first,
+     then Gin and Claro. Default Admin and Gin follow light and dark mode. */
+  --webdashboard-primary: var(--admin-color-primary, var(--gin-color-primary, var(--color-absolutezero, #003ecc)));
+  --webdashboard-on-primary: var(--admin-color-text-on-primary, var(--gin-color-button-text, #fff));
+  --webdashboard-primary-soft: var(--admin-color-primary-soft, var(--gin-color-primary-light, color-mix(in sRGB, var(--webdashboard-primary) 12%, transparent)));
+  --webdashboard-surface: var(--admin-color-bg-surface, var(--gin-bg-layer, var(--color-white, #fff)));
+  --webdashboard-text: var(--admin-color-text, var(--gin-color-text, var(--color-text, #222330)));
+  --webdashboard-text-loud: var(--admin-color-text-loud, var(--gin-color-title, var(--color-text, #222330)));
+  --webdashboard-text-soft: var(--admin-color-text-soft, var(--gin-color-text-light, var(--color-gray-800, #545560)));
+  --webdashboard-border: var(--admin-color-border, var(--gin-border-color, var(--color-gray-200, #d4d4d8)));
+  --webdashboard-shadow: var(--admin-shadow-1, var(--gin-shadow-l1, 0 1px 3px rgb(0 0 0 / 8%)));
+  --webdashboard-success: var(--admin-color-text-success, var(--gin-color-green, var(--color-success, #1d6844)));
+  --webdashboard-warning: var(--admin-color-text-warning, var(--gin-color-warning, var(--color-warning, #826b1f)));
+  --webdashboard-danger: var(--admin-color-text-error, var(--gin-color-danger, var(--color-error, #cc3d3d)));
 
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 1.25rem 1.5rem;
   padding: 1.5rem 1.75rem;
-  color: #fff;
+  color: var(--webdashboard-text);
+  border: 1px solid var(--webdashboard-border);
   border-radius: 1rem;
-  background: linear-gradient(135deg, var(--webdashboard-welcome-accent), color-mix(in srgb, var(--webdashboard-welcome-accent) 55%, #7c3aed));
-  box-shadow: 0 0.5rem 1.5rem color-mix(in srgb, var(--webdashboard-welcome-accent) 25%, transparent);
+  background: linear-gradient(120deg, var(--webdashboard-primary-soft), transparent 65%), var(--webdashboard-surface);
+  box-shadow: var(--webdashboard-shadow);
 }
 
 .webdashboard-welcome__avatar {
@@ -18,9 +32,10 @@
   overflow: hidden;
   width: 4.5rem;
   height: 4.5rem;
-  border: 3px solid rgb(255 255 255 / 70%);
+  color: var(--webdashboard-primary);
+  border: 3px solid var(--webdashboard-primary);
   border-radius: 50%;
-  background: rgb(255 255 255 / 20%);
+  background: var(--webdashboard-primary-soft);
   place-items: center;
 }
 
@@ -31,9 +46,9 @@
 }
 
 .webdashboard-welcome__avatar span {
+  letter-spacing: 0.05em;
   font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
 .webdashboard-welcome__body {
@@ -43,13 +58,14 @@
 
 .webdashboard-welcome__greeting {
   margin: 0;
-  opacity: 0.85;
+  color: var(--webdashboard-primary);
   font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .webdashboard-welcome__name {
   margin: 0.125rem 0 0.375rem;
-  color: inherit;
+  color: var(--webdashboard-text-loud);
   font-size: 1.75rem;
   line-height: 1.2;
 }
@@ -61,7 +77,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  opacity: 0.9;
+  color: var(--webdashboard-text-soft);
   font-size: 0.875rem;
 }
 
@@ -74,16 +90,21 @@
 .webdashboard-welcome__action {
   padding: 0.5rem 1rem;
   text-decoration: none;
-  color: #fff;
-  border: 1px solid rgb(255 255 255 / 45%);
+  color: var(--webdashboard-primary);
+  border: 1px solid var(--webdashboard-primary);
   border-radius: 999px;
-  background: rgb(255 255 255 / 15%);
+  background: transparent;
   font-size: 0.875rem;
   font-weight: 600;
 }
 
+.webdashboard-welcome__action:first-child {
+  color: var(--webdashboard-on-primary);
+  background: var(--webdashboard-primary);
+}
+
 .webdashboard-welcome__action:hover,
 .webdashboard-welcome__action:focus {
-  color: var(--webdashboard-welcome-accent);
-  background: #fff;
+  color: var(--webdashboard-on-primary);
+  background: var(--webdashboard-primary);
 }

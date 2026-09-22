@@ -5,20 +5,34 @@
 }
 
 .webdashboard-stat {
-  --webdashboard-stat-tone: #64748b;
+  /* Colors of the administration theme: the core Default Admin theme first,
+     then Gin and Claro. Default Admin and Gin follow light and dark mode. */
+  --webdashboard-primary: var(--admin-color-primary, var(--gin-color-primary, var(--color-absolutezero, #003ecc)));
+  --webdashboard-on-primary: var(--admin-color-text-on-primary, var(--gin-color-button-text, #fff));
+  --webdashboard-primary-soft: var(--admin-color-primary-soft, var(--gin-color-primary-light, color-mix(in sRGB, var(--webdashboard-primary) 12%, transparent)));
+  --webdashboard-surface: var(--admin-color-bg-surface, var(--gin-bg-layer, var(--color-white, #fff)));
+  --webdashboard-text: var(--admin-color-text, var(--gin-color-text, var(--color-text, #222330)));
+  --webdashboard-text-loud: var(--admin-color-text-loud, var(--gin-color-title, var(--color-text, #222330)));
+  --webdashboard-text-soft: var(--admin-color-text-soft, var(--gin-color-text-light, var(--color-gray-800, #545560)));
+  --webdashboard-border: var(--admin-color-border, var(--gin-border-color, var(--color-gray-200, #d4d4d8)));
+  --webdashboard-shadow: var(--admin-shadow-1, var(--gin-shadow-l1, 0 1px 3px rgb(0 0 0 / 8%)));
+  --webdashboard-success: var(--admin-color-text-success, var(--gin-color-green, var(--color-success, #1d6844)));
+  --webdashboard-warning: var(--admin-color-text-warning, var(--gin-color-warning, var(--color-warning, #826b1f)));
+  --webdashboard-danger: var(--admin-color-text-error, var(--gin-color-danger, var(--color-error, #cc3d3d)));
+  --webdashboard-stat-tone: var(--webdashboard-text-loud);
 
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   padding: 1.125rem 1.25rem 1.125rem 1.5rem;
-  text-decoration: none;
-  color: inherit;
-  border: 1px solid rgb(0 0 0 / 8%);
-  border-radius: 0.75rem;
-  background: #fff;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 6%);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  text-decoration: none;
+  color: var(--webdashboard-text);
+  border: 1px solid var(--webdashboard-border);
+  border-radius: 0.75rem;
+  background: var(--webdashboard-surface);
+  box-shadow: var(--webdashboard-shadow);
 }
 
 .webdashboard-stat::before {
@@ -33,23 +47,23 @@
 a.webdashboard-stat:hover,
 a.webdashboard-stat:focus {
   transform: translateY(-2px);
-  box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 10%);
+  border-color: var(--webdashboard-stat-tone);
 }
 
 .webdashboard-stat--info {
-  --webdashboard-stat-tone: var(--accent-base, #015efe);
+  --webdashboard-stat-tone: var(--webdashboard-primary);
 }
 
 .webdashboard-stat--success {
-  --webdashboard-stat-tone: #16a34a;
+  --webdashboard-stat-tone: var(--webdashboard-success);
 }
 
 .webdashboard-stat--warning {
-  --webdashboard-stat-tone: #d97706;
+  --webdashboard-stat-tone: var(--webdashboard-warning);
 }
 
 .webdashboard-stat--danger {
-  --webdashboard-stat-tone: #dc2626;
+  --webdashboard-stat-tone: var(--webdashboard-danger);
 }
 
 .webdashboard-stat__value {
@@ -60,16 +74,11 @@ a.webdashboard-stat:focus {
 }
 
 .webdashboard-stat__label {
+  color: var(--webdashboard-text-loud);
   font-weight: 600;
 }
 
 .webdashboard-stat__description {
-  opacity: 0.7;
+  color: var(--webdashboard-text-soft);
   font-size: 0.8125rem;
-}
-
-[data-gin-theme="dark"] .webdashboard-stat,
-.gin--dark-mode .webdashboard-stat {
-  border-color: rgb(255 255 255 / 12%);
-  background: rgb(255 255 255 / 5%);
 }
