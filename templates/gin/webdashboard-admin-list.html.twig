@@ -17,13 +17,15 @@
 <dl{{ attributes.addClass(classes) }}>
   {% for item in list %}
     <div class="admin-item{% if item.image %} admin-item-with-image{% endif %}">
-      <a{{ item.link_attributes.addClass('admin-item__link') }}>{{ item.title }}</a>
       {% if item.image %}
         <div class="image"><img src="{{ item.image }}" alt="" /></div>
         <div class="content">
       {% endif %}
+      {# The link stays inside the term: a definition list takes only dt, dd
+         and div children. The stretched link keeps the whole item clickable,
+         the way Gin draws its administration lists. #}
       <dt class="admin-item__title">
-        {{ item.title }}
+        <a{{ item.link_attributes.addClass(['admin-item__link', 'admin-item__link--stretched']) }}>{{ item.title }}</a>
       </dt>
       {% if item.description %}
         <dd class="admin-item__description">

@@ -16,3 +16,16 @@
 .admin-item-with-image .content {
   flex: 3 4;
 }
+
+/**
+ * The whole item is clickable, while the link itself stays inside the term.
+ */
+.admin-item {
+  position: relative;
+}
+
+.admin-item__link--stretched::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
