@@ -16,3 +16,12 @@ variables:
   SKIP_ESLINT: "1"
   _CSPELL_IGNORE_PATHS: "js/es/*"
   _PHPUNIT_CONCURRENT: "0"
+  # Also test with the next major Drupal version and the newest PHP.
+  OPT_IN_TEST_NEXT_MAJOR: 1
+  OPT_IN_TEST_MAX_PHP: 1
+
+# Drupal 12: let Composer install the contributed modules that do not declare
+# ^12 yet.
+composer (next major):
+  variables:
+    _LENIENT_ALLOW_LIST: "display_builder,display_builder_ui,display_builder_page_layout,display_builder_entity_view,display_builder_views"

@@ -259,4 +259,18 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
     return $this->entity;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * Dashboards are not translated in Display Builder: only the default
+   * language is available.
+   */
+  public function getTranslationLanguages($include_default = TRUE): array {
+    if (!$include_default) {
+      return [];
+    }
+    $default = $this->languageManager->getDefaultLanguage();
+    return [$default->getId() => $default];
+  }
+
 }
