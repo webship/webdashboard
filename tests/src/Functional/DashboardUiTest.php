@@ -27,7 +27,7 @@ final class DashboardUiTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'stark';
 
   /**
    * The ID of the dashboard under test.
@@ -40,15 +40,23 @@ final class DashboardUiTest extends BrowserTestBase {
   private UserInterface $adminUser;
 
   /**
+   * The administration theme: Claro on Drupal 11, Default Admin on Drupal 12.
+   */
+  private string $adminTheme;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->container->get('theme_installer')->install(['claro']);
-    $this->config('system.theme')->set('admin', 'claro')->set('default', 'olivero')->save();
+    // Drupal 12 removed Olivero and Claro: test with Stark as the front-end
+    // theme and the administration theme core ships.
+    $this->adminTheme = $this->container->get('extension.list.theme')->exists('claro') ? 'claro' : 'default_admin';
+    $this->container->get('theme_installer')->install([$this->adminTheme]);
+    $this->config('system.theme')->set('admin', $this->adminTheme)->set('default', 'stark')->save();
     Profile::create(['id' => 'test', 'label' => 'Test', 'description' => ''])->save();
 
-    foreach (['olivero', 'claro'] as $theme) {
+    foreach (['stark', $this->adminTheme] as $theme) {
       $this->drupalPlaceBlock('local_actions_block', ['theme' => $theme]);
       $this->drupalPlaceBlock('local_tasks_block', ['theme' => $theme]);
     }
@@ -71,7 +79,7 @@ final class DashboardUiTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/webdashboards');
     $this->assertSession()->statusCodeEquals(Response::HTTP_OK);
-    $this->assertSession()->responseContains('core/themes/claro/css/');
+    $this->assertSession()->responseContains('core/themes/' . $this->adminTheme . '/css/');
     $this->assertSession()->pageTextContains('New dashboard');
 
     $this->createDashboardFromUi();
@@ -98,7 +106,7 @@ final class DashboardUiTest extends BrowserTestBase {
     $this->createDashboardFromUi(TRUE);
     $this->drupalGet('webdashboard/' . self::DASHBOARD);
     $this->assertSession()->statusCodeEquals(Response::HTTP_OK);
-    $this->assertSession()->responseContains('core/themes/olivero/css/');
+    $this->assertSession()->responseNotContains('core/themes/' . $this->adminTheme . '/css/');
   }
 
   /**
@@ -113,14 +121,14 @@ final class DashboardUiTest extends BrowserTestBase {
     ]));
     $this->drupalGet('webdashboard/' . self::DASHBOARD);
     $this->assertSession()->statusCodeEquals(Response::HTTP_OK);
-    $this->assertSession()->responseContains('core/themes/claro/css/');
+    $this->assertSession()->responseContains('core/themes/' . $this->adminTheme . '/css/');
 
     $this->drupalLogin($this->drupalCreateUser([
       'can view ' . self::DASHBOARD . ' webdashboard',
     ]));
     $this->drupalGet('webdashboard/' . self::DASHBOARD);
     $this->assertSession()->statusCodeEquals(Response::HTTP_OK);
-    $this->assertSession()->responseContains('core/themes/olivero/css/');
+    $this->assertSession()->responseNotContains('core/themes/' . $this->adminTheme . '/css/');
   }
 
   /**

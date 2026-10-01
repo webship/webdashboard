@@ -49,11 +49,16 @@ class SystemInfo extends DashboardItemBase {
    *   each with an amount and a text.
    */
   public static function getCounter(array $requirements): array {
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements, __METHOD__);
     $amounts = ['error' => 0, 'warning' => 0, 'checked' => 0];
 
     foreach ($requirements as $requirement) {
-      $status = ($requirement['severity'] ?? RequirementSeverity::Info)->status();
+      $severity = $requirement['severity'] ?? RequirementSeverity::Info;
+      // Drupal 11 can still hand over a legacy integer severity from a
+      // contributed module; Drupal 12 only has the enum.
+      if (\is_int($severity)) {
+        $severity = RequirementSeverity::from($severity);
+      }
+      $status = $severity->status();
 
       if (isset($amounts[$status])) {
         $amounts[$status]++;
