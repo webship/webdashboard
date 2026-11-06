@@ -138,7 +138,9 @@ final class DashboardTest extends KernelTestBase {
     $dashboard->setOverriddenSources($account, []);
     $this->assertTrue($dashboard->isOverridden($account));
 
-    $this->assertSame([self::SOURCE], $override->revert());
+    $this->assertSame([self::SOURCE], $override->getDefaultSources());
+    $this->assertTrue($dashboard->isOverridden($account), 'Reading the default sources leaves the override.');
+    $override->deleteOverride();
     $this->assertFalse($dashboard->isOverridden($account));
   }
 
@@ -176,10 +178,12 @@ final class DashboardTest extends KernelTestBase {
     $this->assertFalse($dashboard->access('update', $viewer));
     $this->assertTrue($dashboard->access('override', $personalizer));
 
-    $own = 'webdashboard_override__board__' . $personalizer->id();
-    $this->assertTrue(DashboardOverrideBuildable::checkAccess($own, $personalizer)->isAllowed());
-    $this->assertTrue(DashboardOverrideBuildable::checkAccess($own, $viewer)->isForbidden(), 'Nobody builds the personalized dashboard of somebody else.');
-    $this->assertFalse(DashboardBuildable::checkAccess('webdashboard__board', $personalizer)->isAllowed());
+    $own = $this->createOverride($dashboard, $personalizer);
+    $this->assertTrue($own->access('update', $personalizer, TRUE)->isAllowed());
+    $this->assertTrue($own->access('update', $viewer, TRUE)->isForbidden(), 'Nobody builds the personalized dashboard of somebody else.');
+    /** @var \Drupal\display_builder\DisplayBuildableInterface $default */
+    $default = $this->buildableManager->createInstance('webdashboard', ['entity' => $dashboard]);
+    $this->assertFalse($default->access('update', $personalizer));
 
     $permissions = $this->container->get('user.permissions')->getPermissions();
     $this->assertSame(['config' => ['webdashboard.webdashboard.board']], $permissions[DashboardPermissions::viewPermission('board')]['dependencies']);

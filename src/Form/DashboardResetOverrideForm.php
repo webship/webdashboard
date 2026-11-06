@@ -83,7 +83,7 @@ class DashboardResetOverrideForm extends ConfirmFormBase {
       'entity' => $this->dashboard,
       'uid' => (int) $this->currentUser()->id(),
     ]);
-    $buildable->revert();
+    $buildable->deleteOverride();
 
     // Drop the builder instance too, so the next personalization starts from
     // the default dashboard rather than from the history of this one.

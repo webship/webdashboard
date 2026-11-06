@@ -35,6 +35,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implements DisplayBuildableOverrideInterface {
 
   /**
+   * The instance prefix, also usable before the plugin is built.
+   */
+  public const PREFIX = 'webdashboard_override__';
+
+  /**
    * The user data service.
    */
   protected UserDataInterface $userData;
@@ -84,17 +89,25 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the dashboard and user IDs from an instance ID.
    *
    * The user ID is the last part: a dashboard ID is a machine name, and a
-   * machine name may hold a double underscore of its own.
+   * machine name may hold a double underscore of its own. Display Builder
+   * 1.0.0-beta9 also asks for it.
+   *
+   * @param string $instance_id
+   *   The Instance entity ID.
+   *
+   * @return array|null
+   *   The dashboard ID keyed by 'webdashboard' and the user ID keyed by 'uid',
+   *   or NULL for another instance.
    */
   public static function checkInstanceId(string $instance_id): ?array {
-    if (!\str_starts_with($instance_id, self::getPrefix())) {
+    if (!\str_starts_with($instance_id, self::PREFIX)) {
       return NULL;
     }
 
-    $rest = \substr($instance_id, \strlen(self::getPrefix()));
+    $rest = \substr($instance_id, \strlen(self::PREFIX));
     $position = \strrpos($rest, '__');
 
     if ($position === FALSE) {
@@ -118,35 +131,48 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
    *
    * A personalized dashboard is only ever built by the person it belongs to.
    */
-  public static function checkAccess(string $instance_id, AccountInterface $account): AccessResultInterface {
-    $params = self::checkInstanceId($instance_id);
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE): AccessResultInterface|bool {
+    $account ??= $this->currentUser;
+    $dashboard = $this->getEntity();
+    $uid = $this->configuration['uid'];
 
-    if (!$params) {
-      return AccessResult::neutral();
+    if ($uid === 0) {
+      $result = AccessResult::neutral();
+    }
+    elseif ($account->isAnonymous() || (int) $account->id() !== $uid) {
+      $result = AccessResult::forbidden()->cachePerUser();
+    }
+    elseif (!$dashboard) {
+      $result = AccessResult::neutral();
+    }
+    else {
+      $result = $dashboard->access('override', $account, TRUE);
+
+      if ($result instanceof RefinableCacheableDependencyInterface) {
+        $result->addCacheContexts(['user']);
+      }
     }
 
-    if ($account->isAnonymous() || (int) $account->id() !== $params['uid']) {
-      return AccessResult::forbidden()->cachePerUser();
-    }
-
-    /** @var \Drupal\webdashboard\Entity\DashboardInterface|null $dashboard */
-    $dashboard = \Drupal::entityTypeManager()->getStorage('webdashboard')->load($params['webdashboard']);
-
-    if (!$dashboard) {
-      return AccessResult::neutral();
-    }
-
-    $result = $dashboard->access('override', $account, TRUE);
-
-    if ($result instanceof RefinableCacheableDependencyInterface) {
-      $result->addCacheContexts(['user']);
-    }
-
-    return $result;
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
    * {@inheritdoc}
+   */
+  public function toUrl(string $rel = 'canonical'): ?Url {
+    $id = $this->getEntity()?->id();
+
+    return match ($rel) {
+      'canonical' => $id === NULL ? NULL : Url::fromRoute('entity.webdashboard.canonical', ['webdashboard' => $id]),
+      'edit-form', 'collection', 'add-form' => NULL,
+      default => throw new \InvalidArgumentException(\sprintf('Unknown link relationship "%s".', $rel)),
+    };
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases use ::getBuilderUrl().
    */
   public static function getUrlFromInstanceId(string $instance_id): Url {
     $params = self::checkInstanceId($instance_id);
@@ -160,6 +186,8 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
 
   /**
    * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases use ::toUrl().
    */
   public static function getDisplayUrlFromInstanceId(string $instance_id): Url {
     $params = self::checkInstanceId($instance_id);
@@ -229,19 +257,20 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
   /**
    * {@inheritdoc}
    */
-  public function revert(): array {
+  public function getDefaultSources(): array {
+    return $this->getEntity()?->getSources() ?? [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteOverride(): void {
     $account = $this->getAccount();
     $entity = $this->getEntity();
 
-    if (!$entity) {
-      return [];
-    }
-
-    if ($account) {
+    if ($account && $entity) {
       $entity->deleteOverride($account);
     }
-
-    return $entity->getSources();
   }
 
   /**
@@ -265,11 +294,13 @@ final class DashboardOverrideBuildable extends DisplayBuildablePluginBase implem
       return NULL;
     }
 
-    return \sprintf('%s%s__%d', self::getPrefix(), $entity->id(), $uid);
+    return \sprintf('%s%s__%d', self::PREFIX, $entity->id(), $uid);
   }
 
   /**
    * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases read the plugin off each Instance.
    */
   public function collectInstances(): array {
     $instances = [];

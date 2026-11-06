@@ -28,11 +28,19 @@ class StatusUpdates extends DashboardItemBase {
   protected ModuleHandlerInterface $moduleHandler;
 
   /**
+   * The update manager, when the Update module is enabled.
+   */
+  protected ?UpdateManagerInterface $updateManager = NULL;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->moduleHandler = $container->get('module_handler');
+    if ($container->has('update.manager')) {
+      $instance->updateManager = $container->get('update.manager');
+    }
 
     return $instance;
   }
@@ -48,14 +56,26 @@ class StatusUpdates extends DashboardItemBase {
       );
     }
 
-    $available = update_get_available(FALSE);
+    // Drupal 11.5 moved these to the update manager and deprecated the
+    // procedural functions, which Drupal 13 removes. Earlier cores only have
+    // the functions.
+    $manager = $this->updateManager;
+    $has_manager_api = $manager && method_exists($manager, 'getAvailable') && method_exists($manager, 'calculateProjectData');
+    // @phpstan-ignore function.deprecated
+    $available = $has_manager_api ? $manager->getAvailable(FALSE) : update_get_available(FALSE);
 
     if (!$available) {
       return $this->buildMessage($this->t('Could not get updates'), ['status-report-card']);
     }
 
-    $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
-    $project_data = update_calculate_project_data($available);
+    if ($has_manager_api) {
+      $project_data = $manager->calculateProjectData($available);
+    }
+    else {
+      $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
+      // @phpstan-ignore function.deprecated
+      $project_data = update_calculate_project_data($available);
+    }
 
     $counter = [
       UpdateManagerInterface::NOT_SECURE => 0,

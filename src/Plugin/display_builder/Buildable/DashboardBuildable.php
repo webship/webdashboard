@@ -30,6 +30,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class DashboardBuildable extends DisplayBuildablePluginBase {
 
   /**
+   * The instance prefix, also usable before the plugin is built.
+   */
+  public const PREFIX = 'webdashboard__';
+
+  /**
    * The language manager, for the translation languages of the dashboard.
    */
   protected LanguageManagerInterface $dashboardLanguageManager;
@@ -71,27 +76,54 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the dashboard ID from an instance ID.
+   *
+   * Display Builder 1.0.0-beta9 also asks for it.
+   *
+   * @param string $instance_id
+   *   The Instance entity ID.
+   *
+   * @return array|null
+   *   The dashboard ID, keyed by 'webdashboard', or NULL for another instance.
    */
   public static function checkInstanceId(string $instance_id): ?array {
-    if (!\str_starts_with($instance_id, self::getPrefix())) {
+    if (!\str_starts_with($instance_id, self::PREFIX)) {
       return NULL;
     }
 
     return [
-      'webdashboard' => \substr($instance_id, \strlen(self::getPrefix())),
+      'webdashboard' => \substr($instance_id, \strlen(self::PREFIX)),
     ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function checkAccess(string $instance_id, AccountInterface $account): AccessResultInterface {
-    return AccessResult::allowedIfHasPermission($account, 'administer webdashboard');
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE): AccessResultInterface|bool {
+    $account ??= $this->currentUser;
+    $result = AccessResult::allowedIfHasPermission($account, 'administer webdashboard');
+
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
    * {@inheritdoc}
+   */
+  public function toUrl(string $rel = 'canonical'): ?Url {
+    $id = $this->getEntity()?->id();
+
+    return match ($rel) {
+      'canonical', 'edit-form' => $id === NULL ? NULL : Url::fromRoute('entity.webdashboard.edit_form', ['webdashboard' => $id]),
+      'collection' => $this->getCollectionUrl(),
+      'add-form' => $this->getAddUrl(),
+      default => throw new \InvalidArgumentException(\sprintf('Unknown link relationship "%s".', $rel)),
+    };
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases use ::getBuilderUrl().
    */
   public static function getUrlFromInstanceId(string $instance_id): Url {
     $params = self::checkInstanceId($instance_id);
@@ -105,6 +137,8 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases use ::toUrl().
    */
   public static function getDisplayUrlFromInstanceId(string $instance_id): Url {
     $params = self::checkInstanceId($instance_id);
@@ -134,6 +168,8 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases use ::toUrl().
    */
   public function getCollectionUrl(): Url {
     return Url::fromRoute('entity.webdashboard.collection');
@@ -141,6 +177,8 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases use ::toUrl().
    */
   public function getAddUrl(): Url {
     return Url::fromRoute('entity.webdashboard.add_form');
@@ -180,11 +218,13 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
       return NULL;
     }
 
-    return self::getPrefix() . $entity->id();
+    return self::PREFIX . $entity->id();
   }
 
   /**
    * {@inheritdoc}
+   *
+   * Display Builder 1.0.0-beta9 asks for it; later releases read the plugin off each Instance.
    */
   public function collectInstances(): array {
     $instances = [];
@@ -212,6 +252,10 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
   public function collectDisplays(array $options = []): array {
     $references = [];
 
+    if (!$this->access('update')) {
+      return $references;
+    }
+
     /** @var \Drupal\webdashboard\Entity\DashboardInterface $dashboard */
     foreach ($this->entityTypeManager->getStorage('webdashboard')->loadMultiple() as $dashboard) {
       /** @var \Drupal\display_builder\DisplayBuildableInterface $buildable */
@@ -234,7 +278,7 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
         built: $built,
         empty: $built && empty($sources),
         settingsUrl: $settings_url,
-        publishedHash: $built ? Instance::getUniqId($sources) : NULL,
+        publishedHash: $built ? self::publishedHash($sources) : NULL,
       );
     }
 
@@ -248,6 +292,25 @@ final class DashboardBuildable extends DisplayBuildablePluginBase {
     $entity = $this->getEntity();
 
     return $entity ? ['webdashboard' => EntityContext::fromEntity($entity)] : [];
+  }
+
+  /**
+   * Hashes published sources the way the Instances panel compares them.
+   *
+   * @param array $sources
+   *   The published sources.
+   *
+   * @return int
+   *   The hash, node IDs left out.
+   */
+  private static function publishedHash(array $sources): int {
+    // Display Builder 1.0.0-beta10 hashes in the plugin base, beta9 on Instance.
+    if (\method_exists(self::class, 'contentHash')) {
+      return self::contentHash($sources);
+    }
+
+    // Called by name: static analysis runs against beta10, which dropped it.
+    return \call_user_func([Instance::class, 'getContentHash'], $sources);
   }
 
   /**

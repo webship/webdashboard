@@ -24,7 +24,7 @@
   },
   "require": {
     "drupal/core": "^11.4 || ^12",
-    "drupal/display_builder": "^1.0@beta",
+    "drupal/display_builder": "^1.0.0-beta9",
     "laminas/laminas-feed": "^2.17"
   },
   "suggest": {
